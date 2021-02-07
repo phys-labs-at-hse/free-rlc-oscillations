@@ -15,7 +15,7 @@ Time number's are as in manual.
 Total resistance of the reostate 466 Ohm
 
 Chose the 5th capacitor
-Critical resistance for them is 440 $\pm$ 10 Ohm.
+Critical resistance for them is 440±10 Ohm.
 
 440 * 0.050 = 22
 440 * 0.075 = 33 
@@ -31,5 +31,5 @@ Spiral (horizontal, i.e. X is for capacitor):
 44 Ohm: 0.01 V * (8.2, 4.7, 2.6, 1.4)
 55 Ohm: 0.01 V * (7.6, 3.7, 1.7, 0.8)
 
-Frequency is around 1 / (500 us * 5 / 16) = 6.4 kHz \approx 1 / (2 * pi * sqrt(100e-9 * 5.8e-3))
+Frequency is around 1 / (500 us * 5 / 16) = 6.4 kHz ≈ 1 / (2 * pi * sqrt(100e-9 * 5.8e-3))
 At this frequency: L 400 = 5.97 mH, R 400 = 6.7 Ohm
