@@ -1,1 +1,14 @@
 my_old_oscillograph_guide.odt
+
+# TeX-generated auxilary files
+*.out
+*.snm
+*.nav
+*.aux
+*.log
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Python-generated auxilary files
+__pycache__/
