@@ -37,7 +37,7 @@ plt.ylabel('Логарифм пикового напряжения', fontsize=14
 plt.savefig('qfactor_peaks.png')
 plt.close()
 
-slopes = np.array((0.15, 0.48, 0.72, 0.86, 0.92,))
+slopes = np.array((0.370, 0.486, 0.614, 0.797, 0.914,))
 
 # Moving to the spiral method
 voltages_tuple = (

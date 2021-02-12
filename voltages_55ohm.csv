@@ -1,7 +1,5 @@
-peak number, voltage in cells of 0.1 V/div
-1, 8
-2, 3.8
-3, 1.6
-4, 0.8
-5, 0.3
-6, 0.1
+peak number, voltage
+1, 7
+2, 3.25
+3, 1.4
+4, 0.65

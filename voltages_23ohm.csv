@@ -1,14 +1,6 @@
-peak number, voltage in cells of 20 mV/div
-1, 8
-2, 7
-3, 5.8
-4, 5
-5, 4.2
-6, 3.8
-7, 3.2
-8, 2.7
-9, 2.2
-10, 2
-11, 1.8
-12, 1.5
-15, 1
+peak number, voltage in cells of 2 V/div
+1, 7.9
+2, 5.5
+3, 3.8
+4, 2.6
+5, 1.8
