@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import uncertainties as unc
 from uncertainties import unumpy as unp
-from labtables import Table
+import labtables
 
 
 def uscatter(x, y, add_line=False):
@@ -24,7 +24,7 @@ ress = np.array((23, 34, 44, 55, 65))
 paths = (f'voltages_{r}ohm.csv' for r in ress)
 
 for path in paths:
-    numbers, voltages = Table.read_csv(path)
+    numbers, voltages = labtables.read_csv(path)
     numbers = np.array(numbers)
     voltages = unp.uarray(voltages, 0.1)
     uscatter(numbers, unp.log(voltages), add_line=True)
@@ -53,8 +53,8 @@ for voltages in voltages_tuple:
     numbers = np.array(range(1, len(voltages) + 1))
     uscatter(numbers, unp.log(voltages), add_line=True)
 
-plt.grid()
 plt.title('По спирали', fontsize=16)
+plt.grid()
 plt.xlabel('Номер пика $U(t)$', fontsize=14)
 plt.ylabel('Логарифм пикового напряжения', fontsize=14)
 plt.savefig('qfactor_peaks_spiral.png')

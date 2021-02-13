@@ -1,15 +1,17 @@
 class Table:
     def __init__(self, *columns, colnames=None):
         self.columns = columns
-        if colnames is None:
-            self.colnames = (f'col{i}' for i in range(len(columns)))
-        else:
+
+        if colnames:
             self.colnames = colnames
+        else:
+            self.colnames = (f'col{i}' for i in range(len(columns)))
 
         if not len(set(map(len, columns))) == 1:
             raise ValueError('Columns have different lengths.')
 
-    def __rows(self):
+    def rows(self):
+        """Return str array representing the table rows."""
         rows = []
         rows.append(','.join(self.colnames))
         for row in zip(*self.columns):
@@ -17,33 +19,30 @@ class Table:
         return rows
 
     def __repr__(self):
-        return '\n'.join(self.__rows())
+        return '\n'.join(self.rows())
 
-    def __add_row_numbers(self):
+    def add_row_numbers(self):
         return Table(range(1, len(self.columns[0]) + 1),
                      *self.columns,
                      colnames=('№', *self.colnames))
 
-    @staticmethod
-    def csv(table, show_row_numbers=False):
+    def to_csv(self, show_row_numbers=False):
         """Return given table as a multiline string in csv format."""
         if show_row_numbers:
-            return table.__add_row_numbers().__repr__()
+            return self.add_row_numbers().__repr__()
         else:
-            return table.__repr__()
+            return self.__repr__()
 
-    @staticmethod
-    def write_csv(table, filepath, show_row_numbers=False):
+    def write_csv(self, filepath, show_row_numbers=False):
         """Write given table to file in csv format."""
         if not filepath.endswith('.csv'):
             raise ValueError('Filepath extension is not ".csv".')
         with open(filepath, 'x') as file:
-            file.write(Table.csv(table, show_row_numbers=show_row_numbers))
+            file.write(self.to_csv(show_row_numbers=show_row_numbers))
 
-    @staticmethod
-    def latex(table, show_row_numbers=False):
-        """Return given table as a LaTeX tabular."""
-        table_copy = table.__add_row_numbers() if show_row_numbers else table
+    def to_latex(self, show_row_numbers=False):
+        """Return given table as a string in the LaTeX tabular format."""
+        table_copy = self.add_row_numbers() if show_row_numbers else self
         line_ending = r' \\ \hline' + '\n'
 
         result = r'\begin{tabular}{|'
@@ -58,54 +57,90 @@ class Table:
 
         return result
 
-    @staticmethod
-    def write_latex(table, filepath, show_row_numbers=False):
-        """Write given table to file in latex-tabular format"""
+    def write_latex(self, filepath, show_row_numbers=False):
+        """Write given table to file in LaTeX tabular format"""
         if not filepath.endswith('.tex'):
             raise ValueError('Filepath extension is not ".tex".')
         with open(filepath, 'x') as file:
-            file.write(Table.latex(table, show_row_numbers=show_row_numbers))
+            file.write(self.to_latex(show_row_numbers=show_row_numbers))
 
-    @staticmethod
-    def read_csv(filepath):
-        """Read csv file and return an iterable of it's columns
+    @classmethod
+    def from_csv(cls, filepath, comment_char='#'):
+        """Read csv file and return a Table instance made of it
 
         If the first line in the csv file contains letters, it is
-        assumed to be a header row and skipped.
-        To assign the result, use unpacking:
+        assumed to be a header row and used for colnames.
 
-            col1, col2, col3 = labtable.read_csv(filepath)
+        Lines starting with the comment_char are ignored.
         """
         with open(filepath) as file:
             rows = []
-
-            first_line = next(file).strip()
-            if not any(char.isalpha() for char in first_line):
-                rows.append(list(map(float, first_line.split(','))))
+            colnames = []
 
             for line in file:
-                rows.append(list(map(float, line.strip().split(','))))
+                line = line.strip()
+                if not line or line[0] == comment_char:
+                    continue
 
-            return zip(*rows)
+                if not rows and any(char.isalpha() for char in line):
+                    colnames = line.split(',')
+                else:
+                    rows.append(list(map(float, line.split(','))))
+
+            return cls(*zip(*rows), colnames=colnames)
+
+
+def read_csv(filepath, comment_char='#'):
+    """Read a csv file and return a Table instance made of it
+
+    If the first line in the csv file contains letters, it is assumed
+    to be a header row and ignored.
+    Lines starting with comment_char are ignored too.
+
+    To assign the returned value, use unpacking:
+
+        col1, col2, col3 = labtables.read_csv(filepath)
+
+    To use numpy arrays instead of lists, map it over the returned:
+
+        col1, col2, col3 = map(np.array, labtables.read_csv(filepath))
+
+    """
+    return Table.from_csv(filepath, comment_char=comment_char).columns
+
+
+def convert_csv_to_latex(csv_filepath, latex_filepath):
+    """Convert csv_filepath into LaTeX, and write to latex_filepath
+
+    First line in the csv file counts, even if it contains letters.
+    Lines starting with # are ignored.
+    """
+    Table.from_csv(csv_filepath).write_latex(latex_filepath)
+
+
+def test():
+    from os import makedirs
+    test_dir = 'test_tables/'
+    makedirs(test_dir, exist_ok=True)
+
+    a, b, c = ((i, i + 1, i + 2) for i in [1, 5, 10])
+    print(f'a = {a}\nb = {b}\nc = {c}')
+    table = Table(a, b, c, colnames=['a', 'b', 'c'])
+
+    print(table, table.add_row_numbers(), table.to_csv(show_row_numbers=True),
+          table.to_latex(), sep='\n\n')
+
+    table.write_csv(test_dir + 'labtable-example-1.csv')
+    table.write_csv(test_dir + 'labtable-example-2.csv', show_row_numbers=True)
+    table.write_latex(test_dir + 'labtable-example-1.tex')
+    table.write_latex(test_dir + 'labtable-example-2.tex', show_row_numbers=True)
+
+    a_, b_, c_ = Table.from_csv(test_dir + 'labtable-example-1.csv').columns
+    assert a_ == a and b_ == b and c_ == c
+
+    a_, b_, c_ = read_csv(test_dir + 'labtable-example-1.csv')
+    assert a_ == a and b_ == b and c_ == c
 
 
 if __name__ == '__main__':
-    # This is a simple test.
-    a, b, c = [(i, i + 1, i + 2) for i in [1, 5, 10]]
-    print(f'a = {a}')
-    print(f'b = {b}')
-    print(f'c = {c}')
-    table = Table(a, b, c, colnames=['a', 'b', 'c'])
-    print(table)
-    print(Table.csv(table))
-    print(Table.csv(table, show_row_numbers=True))
-    print(Table.latex(table))
-    Table.write_csv(table, 'labtable-example-1.csv')
-    Table.write_csv(table, 'labtable-example-2.csv', show_row_numbers=True)
-    Table.write_latex(table, 'labtable-example-1.tex')
-    Table.write_latex(table, 'labtable-example-2.tex', show_row_numbers=True)
-    a, b, c = Table.read_csv('labtable-example-1.csv')
-    print(f'a = {a}')
-    print(f'b = {b}')
-    print(f'c = {c}')
-    print(a[1])
+    test()
