@@ -1,0 +1,6 @@
+- update task: find q-factor -> decrement
+- read the manual and add more tasks
+- do I have to estimate errors for q-factor?
+- include the R_{cr} from Θ(r) value
+- add the task corresponding to "R_{cr} from Θ(r)"
+- add a remark about the difference in R_{cr} values, saying "I don't know"
