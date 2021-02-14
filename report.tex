@@ -76,7 +76,39 @@
 Критическое сопротивление \emph{реостата} для данного контура: $440 \pm 10$~Ом при полном сопротивлении реостата 466 Ом.
 Погрешность оценил по чувствительности пика на картинке осциллографа к изменениям --- при меньших изменениях не видел разницы.
 
-Измерение амплитуд по пикам:
+Измерение амплитуд по пикам для сопротивления реостата 23, 34, 44, 55 и 65~Ом:
+\begin{table}[h]
+23~Ом~\input{latex_tables/voltages_23ohm.tex}
+34~Ом~\input{latex_tables/voltages_34ohm.tex}
+44~Ом~\input{latex_tables/voltages_44ohm.tex}
+55~Ом~\input{latex_tables/voltages_55ohm.tex}
+65~Ом~\input{latex_tables/voltages_65ohm.tex}
+\end{table}
+\begin{center}
+\includegraphics[width=0.7\linewidth]{qfactor_peaks.png}
+\end{center}
+
+Измерение амплитуд по спирали:
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Номер пика & Амплитуда при 23 Ом, дел. & При 34 Ом & При 44 Ом & При 55 Ом \\ \hline
+1 & 9    & 10.4 & 8.2 & 7.6  \\ \hline
+2 & 6.6  & 7.0  & 4.7 & 3.7  \\ \hline
+3 & 4.8  & 4.5  & 2.6 & 1.7  \\ \hline
+4 & 3.4  & 2.8  & 1.4 & 0.8  \\ \hline
+5 & 2.4  & 1.8  &     &      \\ \hline       
+6 & 1.6  &      &     &      \\ \hline      
+\end{tabular}
+\begin{center}
+\includegraphics[width=0.7\linewidth]{qfactor_peaks_spiral.png}
+\end{center}
+
+Из графиков можно достать зависимость углового коэффициента $-\Theta$ (декремент затухания) от сопротивления реостата $r$.
+Теоретически, должно получаться $\Theta = \frac{2 \pi r}{R_{\text{cr}}}$
+\begin{center}
+\includegraphics[width=0.7\linewidth]{qfactor_prop_r.png}
+\end{center}
 
 \section{Выводы}
 
